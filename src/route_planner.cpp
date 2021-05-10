@@ -48,7 +48,7 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 // - Return the pointer.
 
 RouteModel::Node *RoutePlanner::NextNode() {
-    RouteModel::Node * lowest_cost_node;
+    RouteModel::Node * lowest_cost_node = nullptr;
 
     //Sort open_list, lowest cost goes to back of list
     for (int o = 0; o < open_list.size(); o++) {
@@ -67,7 +67,7 @@ RouteModel::Node *RoutePlanner::NextNode() {
         }        
     }
 
-    lowest_cost_node = open_list[open_list.size()];
+    lowest_cost_node = open_list.at(open_list.size());
     open_list.pop_back();
 
     return lowest_cost_node;
@@ -119,4 +119,21 @@ void RoutePlanner::AStarSearch() {
     RouteModel::Node *current_node = nullptr;
 
     // TODO: Implement your solution here.
+    current_node = start_node;
+    float current_node_x = current_node->x;
+    float end_node_x = end_node->x;
+    std::cout << "Current node x: " << current_node_x << "\n";
+    std::cout << "End node x: " << end_node_x << "\n";
+
+    while (true) {
+        //current_node_x = current_node->x;
+        if (std::abs(current_node_x - end_node_x) < 1e-9) {
+            break;
+        }
+        std::cout << "Got to eval path";
+        current_node = RoutePlanner::NextNode();  
+        RoutePlanner::AddNeighbors(current_node);
+    }
+
+    m_Model.path = ConstructFinalPath(current_node);
 }

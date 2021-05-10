@@ -8,17 +8,10 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
     end_x *= 0.01;
     end_y *= 0.01;
 
-    // TODO 2: Use the m_Model.FindClosestNode method to find the closest nodes to the starting and ending coordinates.
-    // Store the nodes you find in the RoutePlanner's start_node and end_node attributes.
     start_node = &m_Model.FindClosestNode(start_x, start_y);
     end_node = &m_Model.FindClosestNode(end_x, end_y);    
 }
 
-
-// TODO 3: Implement the CalculateHValue method.
-// Tips:
-// - You can use the distance to the end_node for the h value.
-// - Node objects have a distance method to determine the distance to another node.
 
 float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
 
@@ -42,7 +35,7 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
         node->g_value = current_node->g_value + current_node->distance(*node);
         node->h_value = CalculateHValue(node);
         node->visited = true;
-        open_list.push_back(node);        
+        open_list.emplace_back(node);        
     }
 }
 
@@ -55,7 +48,29 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 // - Return the pointer.
 
 RouteModel::Node *RoutePlanner::NextNode() {
-    
+    RouteModel::Node * lowest_cost_node;
+
+    //Sort open_list, lowest cost goes to back of list
+    for (int o = 0; o < open_list.size(); o++) {
+        bool flag = false;
+        for (int i = 0; i < open_list.size() - i - 1; i++)
+        {
+            float node1_cost = open_list[i]->h_value + open_list[i]->g_value;
+            float node2_cost = open_list[i + 1]->h_value + open_list[i + 1]->g_value;
+            if (node1_cost < node2_cost) {
+                flag = true;
+                std::swap(open_list[i], open_list[i + 1]);
+            }
+            if (flag == true) {
+                break;
+            }           
+        }        
+    }
+
+    lowest_cost_node = open_list[open_list.size()];
+    open_list.pop_back();
+
+    return lowest_cost_node;
 }
 
 
@@ -91,6 +106,4 @@ void RoutePlanner::AStarSearch() {
     RouteModel::Node *current_node = nullptr;
 
     // TODO: Implement your solution here.
-    //Intialize the open list so we can add Nodes to it
-    std::vector<RouteModel::Node> open_list;
 }

@@ -32,7 +32,7 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 }
 
 /**
- * Compare the F values of two cells.
+ * Compare F value of two Nodes
  */
 struct compare_cost {
     inline bool operator() (const RouteModel::Node * a, const RouteModel::Node * b) {
@@ -41,7 +41,6 @@ struct compare_cost {
         return f1 > f2;
     } 
 };
-
 
 RouteModel::Node *RoutePlanner::NextNode() {
     RouteModel::Node * lowest_cost_node = nullptr;
@@ -52,7 +51,6 @@ RouteModel::Node *RoutePlanner::NextNode() {
     lowest_cost_node = open_list.at(open_list.size() - 1);
     open_list.pop_back();
     
-    std::cout << "Open list size: " << open_list.size() << "\n";
     return lowest_cost_node;
 }
 
@@ -73,8 +71,7 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     }
 
     std::reverse(path_found.begin(),path_found.end());
-    
-
+ 
     distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
     return path_found;
 }

@@ -34,19 +34,18 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 /**
  * Compare F value of two Nodes
  */
-struct compare_cost {
-    inline bool operator() (const RouteModel::Node * a, const RouteModel::Node * b) {
+
+bool CompareCost(const RouteModel::Node * a, const RouteModel::Node * b) {
         float f1 = a->g_value + a->h_value;
         float f2 = b->g_value + b->h_value;
         return f1 > f2;
-    } 
-};
+}
 
 RouteModel::Node *RoutePlanner::NextNode() {
     RouteModel::Node * lowest_cost_node = nullptr;
 
     //Sort open_list, lowest cost goes to back of list
-    std::sort(open_list.begin(), open_list.end(), compare_cost());
+    std::sort(open_list.begin(), open_list.end(), CompareCost);
 
     lowest_cost_node = open_list.at(open_list.size() - 1);
     open_list.pop_back();

@@ -35,10 +35,8 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
  * Compare F value of two Nodes
  */
 
-bool CompareCost(const RouteModel::Node * a, const RouteModel::Node * b) {
-        float f1 = a->g_value + a->h_value;
-        float f2 = b->g_value + b->h_value;
-        return f1 > f2;
+bool CompareCost(const RouteModel::Node * a, const RouteModel::Node * b) { 
+    return (a->g_value + a->h_value) > (b->g_value + b->h_value);
 }
 
 RouteModel::Node *RoutePlanner::NextNode() {

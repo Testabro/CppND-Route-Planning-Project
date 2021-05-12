@@ -27,6 +27,67 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     return std::move(contents);
 }
 
+struct InitData {
+    public:
+        void SetStartX (float x) {
+            if (x >=0 && x <= 100) {
+                start_x = x; 
+            }
+        }
+        void SetStartY (float y) {
+            if (y >=0 && y <= 100) {
+               start_y = y; 
+            }
+        }
+        void SetEndX (float x) {
+            if (x >=0 && x <= 100) {
+                end_x = x; 
+            }
+        }
+        void SetEndY (float y) {
+            if (y >=0 && y <= 100) {
+               end_y = y; 
+            }
+        }
+        float StartX() { return start_x; }
+        float StartY() { return start_y; }
+        float EndX() { return end_x; }
+        float EndY() { return end_y; }
+
+    private:
+        float start_x{10};
+        float start_y{10};
+        float end_x{90};
+        float end_y{90};
+};
+
+/**
+ * Calls for user input to set InitData
+ */   
+void SetInitData(InitData * initData) {
+    float start_x;
+    float start_y;
+    float end_x;
+    float end_y;
+    bool good_input = false;
+    
+    std::cout << "Starting postion X Value: ";
+    std::cin >> start_x;
+    initData->SetStartX(start_x);
+
+    std::cout << "Starting postion Y Value: ";
+    std::cin >> start_y;
+    initData->SetStartY(start_y);
+
+    std::cout << "Ending postion X Value: ";
+    std::cin >> end_x;
+    initData->SetEndX(end_x);
+
+    std::cout << "Ending postion Y Value: "; 
+    std::cin >> end_y;
+    initData->SetEndY(end_y);    
+}
+
 int main(int argc, const char **argv)
 {    
     std::string osm_data_file = "";
@@ -52,26 +113,16 @@ int main(int argc, const char **argv)
             osm_data = std::move(*data);
     }
 
-    float start_x = 0;
-    float start_y = 0;
-    float end_x = 0;
-    float end_y = 0;
-
-    std::cout << "Starting postion X Value: ";
-    std::cin >> start_x;
-    std::cout << "Starting postion Y Value: ";
-    std::cin >> start_y;
-    std::cout << "Ending postion X Value: ";
-    std::cin >> end_x;
-    std::cout << "Ending postion Y Value: "; 
-    std::cin >> end_y;
-   
+    //Intialize start and end node x,y
+    InitData initData;        
+    SetInitData(&initData);  
+  
 
     // Build Model.
     RouteModel model{osm_data};
 
     // Create RoutePlanner object and perform A* search.
-    RoutePlanner route_planner{model, start_x, start_y, end_x, end_y};
+    RoutePlanner route_planner{model, initData.StartX(), initData.StartY(), initData.EndX(), initData.EndY()};
     route_planner.AStarSearch();
 
     std::cout << "Distance: " << route_planner.GetDistance() << " meters. \n";

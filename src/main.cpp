@@ -27,65 +27,56 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     return std::move(contents);
 }
 
-struct InitData {
+class InitData {
     public:
+        float StartX() { return start_x; };
         void SetStartX (float x) {
-            if (x >=0 && x <= 100) {
-                start_x = x; 
-            }
+            if (x >=0 && x <= 100) start_x = x;            
         }
-        void SetStartY (float y) {
-            if (y >=0 && y <= 100) {
-               start_y = y; 
-            }
-        }
-        void SetEndX (float x) {
-            if (x >=0 && x <= 100) {
-                end_x = x; 
-            }
-        }
-        void SetEndY (float y) {
-            if (y >=0 && y <= 100) {
-               end_y = y; 
-            }
-        }
-        float StartX() { return start_x; }
-        float StartY() { return start_y; }
-        float EndX() { return end_x; }
-        float EndY() { return end_y; }
 
+        float StartY() { return start_y; };
+        void SetStartY (float y) {
+            if (y >=0 && y <= 100) start_y = y;
+        }
+
+        float EndX() { return end_x; }
+        void SetEndX (float x) {
+            if (x >=0 && x <= 100) end_x = x;
+        }
+
+        float EndY() { return end_y; }
+        void SetEndY (float y) {
+            if (y >=0 && y <= 100) end_y = y;
+        }
+    
     private:
-        float start_x{10};
-        float start_y{10};
-        float end_x{90};
-        float end_y{90};
+        float start_x = 10;
+        float start_y = 10;
+        float end_x = 90;
+        float end_y = 90;
 };
 
 /**
  * Calls for user input to set InitData
  */   
 void SetInitData(InitData * initData) {
-    float start_x;
-    float start_y;
-    float end_x;
-    float end_y;
-    bool good_input = false;
+    float input_value;
     
     std::cout << "Starting postion X Value: ";
-    std::cin >> start_x;
-    initData->SetStartX(start_x);
+    std::cin >> input_value;
+    initData->SetStartX(input_value);
 
     std::cout << "Starting postion Y Value: ";
-    std::cin >> start_y;
-    initData->SetStartY(start_y);
+    std::cin >> input_value;
+    initData->SetStartY(input_value);
 
     std::cout << "Ending postion X Value: ";
-    std::cin >> end_x;
-    initData->SetEndX(end_x);
+    std::cin >> input_value;
+    initData->SetEndX(input_value);
 
     std::cout << "Ending postion Y Value: "; 
-    std::cin >> end_y;
-    initData->SetEndY(end_y);    
+    std::cin >> input_value;
+    initData->SetEndY(input_value);    
 }
 
 int main(int argc, const char **argv)
